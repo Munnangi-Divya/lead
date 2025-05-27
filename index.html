@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lead Form</title>
+  <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+  <form id="leadForm">
+    <h2>Contact Us</h2>
+    <input type="text" name="name" placeholder="Name" required />
+    <input type="email" name="email" placeholder="Email" required />
+    <input type="text" name="company" placeholder="Company (optional)" />
+    <textarea name="message" placeholder="Message (optional)" rows="4"></textarea>
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    const form = document.getElementById('leadForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(form));
+      
+      if (!data.name || !data.email || !/^[\w-.]+@[\w-]+\.[a-z]{2,}$/i.test(data.email)) {
+        alert('Please enter a valid name and email');
+        return;
+      }
+
+      const response = await fetch('http://localhost:5000/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      if (response.ok) {
+        alert('Lead submitted successfully!');
+        form.reset();
+      } else {
+        alert('Failed to submit lead');
+      }
+    });
+  </script>
+</body>
+</html>
+
